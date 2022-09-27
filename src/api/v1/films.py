@@ -39,7 +39,7 @@ async def get_films(
 async def get_film(
         film_id: str = Path(...),
         film_service: FilmElasticService = Depends(get_film_service)
-) -> FilmFull:
+) -> Optional[FilmFull]:
     result = await film_service.get(_id=film_id, model=FilmFull)
 
     return result
