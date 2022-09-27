@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseSettings, SecretStr
 
 
@@ -21,7 +23,7 @@ class Redis(Settings):
     port: int = 6379
     pool_minsize: int = 10
     pool_maxsize: int = 20
-    password: str | None = None
+    password: Optional[str] = None
 
     class Config(Settings.Config):
         env_prefix = 'REDIS_'
@@ -45,10 +47,10 @@ class Logger(Settings):
 
 
 class Envs(Settings):
-    project: Project
-    redis: Redis
-    elastic: Elastic
-    logger: Logger
+    project: Project = Project()
+    redis: Redis = Redis()
+    elastic: Elastic = Elastic()
+    logger: Logger = Logger()
 
 
 envs = Envs()
