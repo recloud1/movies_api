@@ -1,19 +1,13 @@
-from typing import List
+from typing import List, Optional
+
+from pydantic import Field
 
 from models.core import ListModel, Named
 
 
-class GenreBase(Named):
-    pass
-
-
-class GenreBaseBare(GenreBase):
-    pass
-
-
-class GenreFull(GenreBaseBare):
-    pass
+class GenreBare(Named):
+    description: Optional[str] = Field(None)
 
 
 class GenreList(ListModel):
-    data: List[GenreBaseBare]
+    data: List[Named]

@@ -1,8 +1,8 @@
 import uuid
-from typing import List, TypeVar
+from typing import List, TypeVar, Optional
 
 import orjson
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, Field
 
 
 def orjson_dumps(v, *, default):
@@ -30,7 +30,7 @@ class IdMixin(Model):
 
     Указывать первым справа, т.е. ``class YourModel(YourBaseModel, IdMixin)``
     """
-    id: str
+    id: str = Field(..., alias='uuid')
 
     @validator('id')
     def ensure_uuid(cls, value):
@@ -45,15 +45,22 @@ class IdMixin(Model):
         return value
 
 
+class GetMultiQueryParam(Model):
+    rows_per_page: int = Field(25, description='Количество объектов на одной странице')
+    page: int = Field(1, description='Текущая страница')
+    sort_by: str = Field('id', description='Поле сортировки результатов')
+    descending: bool = Field(False, description='Использовать ли обратный порядок сортировки')
+
+
 class ListModel(Model):
     """
     Формат выдачи для всех списков объектов (multiple get)
     """
-    rows_per_page: int | None
-    page: int | None
-    rows_number: int | None
+    rows_per_page: Optional[int]
+    page: Optional[int]
+    rows_number: Optional[int]
     data: List[ListElement]
-    sort_by: str = 'id'
+    sort_by: str = 'uuid'
     descending: bool = False
 
 
