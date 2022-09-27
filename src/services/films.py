@@ -8,10 +8,10 @@ from core.constants import ElasticIndexes
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.films import FilmBase
-from services.core import ElasticServiceBase
+from services.core import ElasticServicePaginatedBase
 
 
-class FilmElasticService(ElasticServiceBase):
+class FilmElasticService(ElasticServicePaginatedBase):
     pass
 
 
@@ -20,4 +20,9 @@ def get_film_service(
         redis: Redis = Depends(get_redis),
         elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> FilmElasticService:
-    return FilmElasticService(FilmBase, index=ElasticIndexes.movies, cache_service=redis, db_service=elastic)
+    return FilmElasticService(
+        model=FilmBase,
+        index=ElasticIndexes.movies,
+        cache_service=redis,
+        db_service=elastic
+    )
