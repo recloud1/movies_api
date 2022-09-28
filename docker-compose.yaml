@@ -1,0 +1,27 @@
+version: '3.7'
+services:
+  redis:
+    restart: 'on-failure'
+    image: 'bitnami/redis:latest'
+    env_file:
+      - ./.env
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_AOF_ENABLED=no
+    command: /opt/bitnami/scripts/redis/run.sh
+    networks:
+      - fastapi
+
+  fastapi:
+    build:
+      context: .
+    expose:
+      - 8000
+    depends_on:
+      - redis
+    networks:
+      - fastapi
+
+networks:
+  fastapi:
+    driver: bridge

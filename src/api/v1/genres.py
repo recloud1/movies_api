@@ -6,8 +6,13 @@ from services.genres import get_genre_service, GenreElasticService
 genres = APIRouter()
 
 
-@genres.get('/', response_model=GenreList, summary='Получение списка жанров', )
-async def get_genres(genre_service: GenreElasticService = Depends(get_genre_service)):
+@genres.get(
+    '/',
+    response_model=GenreList,
+    summary='Получение списка жанров',
+)
+async def get_genres(
+        genre_service: GenreElasticService = Depends(get_genre_service)):
     pass
 
 
