@@ -14,18 +14,11 @@ services:
 
   fastapi:
     build:
-      context: ./src/
+      context: .
     expose:
       - 8000
     depends_on:
       - redis
-    networks:
-      - fastapi
-
-  nginx:
-    build: ./nginx
-    ports:
-      - 80:80
     networks:
       - fastapi
 
