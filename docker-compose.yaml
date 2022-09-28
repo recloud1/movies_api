@@ -19,21 +19,6 @@ services:
       - 8000
     depends_on:
       - redis
-      - elasticsearch
-    networks:
-      - fastapi
-
-  app:
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    env_file:
-      - ./.env
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      - redis
     networks:
       - fastapi
 
@@ -41,8 +26,6 @@ services:
     build: ./nginx
     ports:
       - 80:80
-    depends_on:
-      - app
     networks:
       - fastapi
 
