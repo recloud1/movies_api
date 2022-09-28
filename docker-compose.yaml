@@ -10,33 +10,18 @@ services:
       - REDIS_AOF_ENABLED=no
     command: /opt/bitnami/scripts/redis/run.sh
     networks:
-      - etl
-
-  elasticsearch:
-    image: elasticsearch:8.4.1
-    env_file:
-      - ./.env
-    environment:
-      - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-      - xpack.security.enabled=false
-    volumes:
-      - elastic_data:/usr/share/elasticsearch/data
-    depends_on:
-      - redis
-    networks:
-      - etl
+      - fastapi
 
   fastapi:
     build:
       context: ./src/
     expose:
-      - "8000"
+      - 8000
     depends_on:
       - redis
       - elasticsearch
     networks:
-      - etl
+      - fastapi
 
   app:
     build:
@@ -47,29 +32,20 @@ services:
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - ELASTIC_HOST=elasticsearch
-      - ELASTIC_PORT=9200
     depends_on:
       - redis
-      - elasticsearch
     networks:
-      - etl
+      - fastapi
 
   nginx:
     build: ./nginx
-    volumes:
-      - static_volume:/usr/src/app/static
     ports:
       - 80:80
     depends_on:
       - app
     networks:
-      - etl
+      - fastapi
 
 networks:
-  etl:
+  fastapi:
     driver: bridge
-
-volumes:
-  elastic_data:
-  static_volume:
