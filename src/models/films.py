@@ -17,9 +17,9 @@ class FilmBare(FilmBase):
 
 
 class FilmFull(FilmBare):
-    directors: Optional[List[Named]] = Field(default_factory=list())
-    actors: Optional[List[Named]] = Field(default_factory=list())
-    writers: Optional[List[Named]] = Field(default_factory=list())
+    directors: Optional[List[Named]] = Field(default=[])
+    actors: Optional[List[Named]] = Field(default=[])
+    writers: Optional[List[Named]] = Field(default=[])
 
 
 class FilmList(ListModel):

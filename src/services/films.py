@@ -1,28 +1,28 @@
 from functools import lru_cache
 
-from aioredis import Redis
 from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 
 from core.constants import ElasticIndexes
 from db.elastic import get_elastic
-from db.redis import get_redis
+from db.redis import get_redis, RedisCache
 from models.films import FilmBase
-from services.core import ElasticServicePaginatedBase
+from services.core import CachedElasticPaginated
 
 
-class FilmElasticService(ElasticServicePaginatedBase):
+class FilmElasticService(CachedElasticPaginated):
     pass
 
 
 @lru_cache
 def get_film_service(
-        redis: Redis = Depends(get_redis),
+        redis: RedisCache = Depends(get_redis),
         elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> FilmElasticService:
     return FilmElasticService(
         model=FilmBase,
         index=ElasticIndexes.movies,
         cache_service=redis,
-        db_service=elastic
+        db_service=elastic,
+        expired_data_seconds=600
     )
