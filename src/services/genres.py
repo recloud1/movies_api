@@ -7,7 +7,7 @@ from fastapi import Depends
 from core.constants import ElasticIndexes
 from db.elastic import get_elastic
 from db.redis import get_redis
-from models.genres import GenreBare
+from models.genres import GenreBase
 from services.core import ElasticServicePaginatedBase
 
 
@@ -21,7 +21,7 @@ def get_genre_service(
         elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> GenreElasticService:
     return GenreElasticService(
-        model=GenreBare,
+        model=GenreBase,
         index=ElasticIndexes.genres,
         cache_service=redis,
         db_service=elastic
