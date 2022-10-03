@@ -8,11 +8,11 @@ from core.constants import ElasticIndexes
 from db.elastic import get_elastic
 from db.redis import get_redis
 from models.persons import PersonBase
-from services.core import ElasticServiceBase
+from services.core import ElasticServicePaginatedBase
 from services.genres import GenreElasticService
 
 
-class PersonElasticService(ElasticServiceBase):
+class PersonElasticService(ElasticServicePaginatedBase):
     pass
 
 
