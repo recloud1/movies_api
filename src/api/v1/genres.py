@@ -38,5 +38,5 @@ async def get_genre(
     genre_id: str = Path(...),
     genre_service: GenreElasticService = Depends(get_genre_service),
 ) -> Optional[GenreBase]:
-    result = await genre_service.get(_id=genre_id, model=GenreBase)
+    result = await genre_service.get(_id=genre_id)
     return result

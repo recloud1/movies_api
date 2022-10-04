@@ -38,5 +38,5 @@ async def get_person(
     person_id: str = Path(...),
     person_service: PersonElasticService = Depends(get_person_service),
 ) -> Optional[PersonBase]:
-    result = await person_service.get(_id=person_id, model=PersonBase)
+    result = await person_service.get(_id=person_id)
     return result
