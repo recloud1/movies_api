@@ -55,4 +55,4 @@ async def on_shutdown():
 
 app.include_router(films, prefix='/v1/films', tags=['Films'], responses=default_errors)
 app.include_router(genres, prefix='/v1/genres', tags=['Genres'], responses=default_errors)
-# app.include_router(persons, prefix='/v1/persons', tags=['Persons'], responses=default_errors)
+app.include_router(persons, prefix='/v1/persons', tags=['Persons'], responses=default_errors)
