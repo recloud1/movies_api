@@ -40,7 +40,7 @@ class ElasticServiceBase:
         """
         model = model or self.model
         try:
-            obj: dict = (await self.db.get(self.index, _id, _source_includes=exclude_fields)).get(
+            obj: dict = (await self.db.get(index=self.index, id=_id, _source_includes=exclude_fields)).get(
                 '_source'
             )
         except elasticsearch.NotFoundError:
