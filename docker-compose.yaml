@@ -15,6 +15,9 @@ services:
   fastapi:
     build:
       context: .
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     expose:
       - 8000
     depends_on:

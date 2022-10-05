@@ -1,8 +1,8 @@
-FROM python:3.10-alpine
+FROM python:3.9
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV POETRY_VERSION=1.0.0
+ENV POETRY_VERSION=1.2.0
 
 RUN pip install "poetry==$POETRY_VERSION"
 
@@ -12,7 +12,7 @@ COPY poetry.lock pyproject.toml ./
 
 RUN poetry config virtualenvs.create false && poetry install --no-interaction --no-ansi
 
-COPY . .
+COPY ./src .
 
 EXPOSE 8000
 
