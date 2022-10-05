@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from fastapi import Query
 from pydantic import Field
 
 from models.core import GetMultiQueryParam
@@ -28,5 +29,31 @@ class FilmList(ListModel):
 
 
 class GetMultiQueryParamFilms(GetMultiQueryParam):
-    sort_by: str = Field('imdb_rating')
-    descending: bool = Field(True)
+    def __init__(
+            self,
+            page: int = Query(
+                default=1,
+                ge=1,
+                alias='page[number]',
+                description='Текущая страница'
+            ),
+            rows_per_page: int = Query(
+                default=25,
+                ge=1,
+                le=100,
+                alias='page[size]',
+                description='Количество объектов на одной странице'
+            ),
+            sort_by: str = Query(
+                default='imdb_rating',
+                description='Поле сортировки результатов',
+                alias='sort'
+            ),
+            descending: bool = Query(
+                default=True,
+                description='Использовать ли обратный порядок сортировки'
+            )
+    ):
+        super().__init__(page=page, rows_per_page=rows_per_page)
+        self.sort_by = sort_by
+        self.descending = descending
