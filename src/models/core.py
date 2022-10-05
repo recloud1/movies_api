@@ -1,8 +1,9 @@
 from typing import List, TypeVar, Optional
 
 import orjson
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, validator, Field
 from pydantic.types import UUID4
+from fastapi import Query
 
 
 def orjson_dumps(v, *, default):
@@ -33,11 +34,32 @@ class IdMixin(Model):
     id: UUID4
 
 
-class GetMultiQueryParam(Model):
-    rows_per_page: int = Field(25, description='Количество объектов на одной странице')
-    page: int = Field(1, description='Текущая страница')
-    sort_by: str = Field('id', description='Поле сортировки результатов')
-    descending: bool = Field(False, description='Использовать ли обратный порядок сортировки')
+class GetMultiQueryParam:
+    def __init__(
+            self,
+            page: int = Query(
+                default=1,
+                ge=1,
+                alias='page[number]',
+                description='Текущая страница'
+            ),
+            rows_per_page: int = Query(
+                default=25,
+                ge=1,
+                le=100,
+                alias='page[size]',
+                description='Количество объектов на одной странице'
+            ),
+            sort_by: str = Query(default='id', description='Поле сортировки результатов'),
+            descending: bool = Query(default=False, description='Использовать ли обратный порядок сортировки')
+    ):
+        self.rows_per_page = rows_per_page
+        self.page = page
+        self.sort_by = sort_by
+        self.descending = descending
+
+    def dict(self):
+        return vars(self)
 
 
 class ListModel(Model):
