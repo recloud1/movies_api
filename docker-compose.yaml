@@ -22,6 +22,15 @@ services:
     networks:
       - fastapi
 
+  nginx:
+    build: ./nginx
+    ports:
+      - 80:80
+    depends_on:
+      - fastapi
+    networks:
+      - fastapi
+
 networks:
   fastapi:
     driver: bridge
