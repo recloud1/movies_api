@@ -1,11 +1,24 @@
 import json
 from functools import lru_cache
+from json import JSONEncoder
 from typing import Optional, Any
+from uuid import UUID
 
 import orjson
 from aioredis import Redis
 
 redis: Optional[Redis] = None
+
+old_default = JSONEncoder.default
+
+
+def new_default(self, obj):
+    if isinstance(obj, UUID):
+        return str(obj)
+    return old_default(self, obj)
+
+
+JSONEncoder.default = new_default
 
 
 class RedisCache:

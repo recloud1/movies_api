@@ -1,9 +1,9 @@
-import uuid
 from typing import List, TypeVar, Optional
 
 import orjson
-from fastapi import Query
 from pydantic import BaseModel, validator, Field
+from pydantic.types import UUID4
+from fastapi import Query
 
 
 def orjson_dumps(v, *, default):
@@ -31,19 +31,7 @@ class IdMixin(Model):
 
     Указывать первым справа, т.е. ``class YourModel(YourBaseModel, IdMixin)``
     """
-    id: str = Field(..., alias='uuid')
-
-    @validator('id')
-    def ensure_uuid(cls, value):
-        err = ValueError('Некорректный идентификатор')
-        try:
-            validated = uuid.UUID(value)
-            if validated.version != 4:
-                raise err
-        except ValueError:
-            raise err
-
-        return value
+    id: UUID4
 
 
 class GetMultiQueryParam:
