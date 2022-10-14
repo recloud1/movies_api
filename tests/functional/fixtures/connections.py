@@ -42,7 +42,7 @@ async def request_client():
 @pytest_asyncio.fixture(scope='session')
 async def redis_client():
     redis = await aioredis.create_redis(
-        address=('redis', test_settings.redis.port),
+        address=(test_settings.redis.host, test_settings.redis.port),
         password=test_settings.redis.password,
     )
     await redis.flushall()

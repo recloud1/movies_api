@@ -7,8 +7,15 @@ services:
       - REDIS_PASSWORD=${TEST_REDIS_PASSWORD}
       - REDIS_AOF_ENABLED=no
       - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - ${TEST_REDIS_PORT}:6379
     networks:
       - testing_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 50
 
   elasticsearch:
     image: elasticsearch:8.4.1
@@ -24,6 +31,11 @@ services:
       - redis
     networks:
       - testing_network
+    healthcheck:
+      test: curl -s http://localhost:9200 >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
 
   fastapi:
     build: ../../
@@ -58,8 +70,13 @@ services:
     networks:
       - testing_network
     depends_on:
-      - fastapi
+      elasticsearch:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fastapi:
+        condition: service_started
+
 
 networks:
   testing_network:
-    driver: bridge

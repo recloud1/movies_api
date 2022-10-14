@@ -21,7 +21,7 @@ default_errors = {
 app = FastAPI(
     title=envs.project.name,
     description='Информация о фильмах, жанрах и людях, участвовавших в создании произведения',
-    docs_url='/api/docs',
+    docs_url='/api/v1/docs',
     default_response_class=ORJSONResponse
 )
 

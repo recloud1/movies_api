@@ -1,11 +1,13 @@
-from typing import List
-
-from elasticsearch import AsyncElasticsearch
 import pytest
+from elasticsearch import AsyncElasticsearch
 
-from utils.elastic import elastic_bulk_load
+from utils.elastic import init_elastic_data, clear_elastic_data
 
 
-@pytest.fixture
-async def es_write_data(es_client: AsyncElasticsearch, data: List[dict], index: str):
-    return await elastic_bulk_load(es_client, data, index)
+# @pytest.fixture(scope='session')
+# async def es_data(es_client: AsyncElasticsearch):
+#     results = await init_elastic_data(es_client)
+#
+#     yield results
+#
+#     await clear_elastic_data(es_client)
