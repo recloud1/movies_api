@@ -10,12 +10,13 @@ async def api_request(
         request_client,
         method: RequestMethods,
         route: ApiRoutes,
+        route_detail: str = '',
         query_params=None,
         with_check: bool = True
 ) -> Tuple[ClientResponse, dict]:
     async with request_client.request(
             method=method,
-            url=f'http://{test_settings.api.host}:{test_settings.api.port}/v1/{route}',
+            url=f'http://{test_settings.api.host}:{test_settings.api.port}/v1/{route}/{route_detail}',
             params=query_params
     ) as response:
 

@@ -2,6 +2,5 @@
 import pytest
 
 pytest_plugins = [
-    'fixtures.connections',
-    'fixtures.elastic'
+    'fixtures.connections'
 ]
