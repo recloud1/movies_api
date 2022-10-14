@@ -1,0 +1,82 @@
+version: '3.7'
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - REDIS_PASSWORD=${TEST_REDIS_PASSWORD}
+      - REDIS_AOF_ENABLED=no
+      - ALLOW_EMPTY_PASSWORD=yes
+    ports:
+      - ${TEST_REDIS_PORT}:6379
+    networks:
+      - testing_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 50
+
+  elasticsearch:
+    image: elasticsearch:8.4.1
+    env_file:
+      - ./.env
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+    ports:
+      - ${TEST_ELASTIC_PORT}:9200
+    depends_on:
+      - redis
+    networks:
+      - testing_network
+    healthcheck:
+      test: curl -s http://localhost:9200 >/dev/null || exit 1
+      interval: 30s
+      timeout: 10s
+      retries: 50
+
+  fastapi:
+    build: ../../
+    image: api
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ELASTIC_HOST=elasticsearch
+      - ELASTIC_PORT=9200
+      - REDIS_PASSWORD=${TEST_REDIS_PASSWORD}
+    ports:
+      - ${TEST_API_PORT}:8000
+    depends_on:
+      - redis
+      - elasticsearch
+    networks:
+      - testing_network
+
+  pytest:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file:
+      - ./.env
+    environment:
+      - TEST_ELASTIC_HOST=elasticsearch
+      - TEST_ELASTIC_PORT=9200
+      - TEST_REDIS_HOST=redis
+      - TEST_REDIS_PORT=6379
+      - TEST_API_HOST=fastapi
+      - TEST_API_PORT=8000
+    networks:
+      - testing_network
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      fastapi:
+        condition: service_started
+
+
+networks:
+  testing_network:
