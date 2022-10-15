@@ -1,9 +1,16 @@
-from typing import Tuple
+from typing import Tuple, Optional
 
 from aiohttp import ClientResponse
 
 from core.constants import RequestMethods, ApiRoutes
 from core.settings import test_settings
+
+default_query_params: dict = {
+    'page[number]': 1,
+    'page[size]': 25,
+    'sort_by': 'id',
+    'descending': 'False'
+}
 
 
 async def api_request(
@@ -11,7 +18,7 @@ async def api_request(
         method: RequestMethods,
         route: ApiRoutes,
         route_detail: str = '',
-        query_params=None,
+        query_params: Optional[dict] = None,
         with_check: bool = True
 ) -> Tuple[ClientResponse, dict]:
     async with request_client.request(

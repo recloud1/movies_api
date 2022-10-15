@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import List, Optional, Tuple, Type, TypeVar, Set
 
 import elasticsearch
@@ -86,7 +87,9 @@ class ElasticServicePaginatedBase(ElasticServiceBase):
         :return: список объектов и общее количество объектов по запросу
         """
         model = model or self.model
-        get_multi_params = self._pack_get_multi_params(query_params, **params)
+        total_index_docs_count = (await self.db.count(index=self.index)).get('count')
+
+        get_multi_params = self._pack_get_multi_params(query_params, total_index_docs_count, **params)
 
         search_params = self._pack_search_params(search, filters)
 
@@ -99,12 +102,13 @@ class ElasticServicePaginatedBase(ElasticServiceBase):
 
         return results, count
 
-    def _pack_get_multi_params(self, query_params: GetMultiQueryParam, **params) -> dict:
+    def _pack_get_multi_params(self, query_params: GetMultiQueryParam, total_count: int, **params) -> dict:
         order = 'desc' if query_params.descending else 'asc'
         sort_by = f'{query_params.sort_by}:{order}'
+        size = query_params.rows_per_page if query_params.rows_per_page != 0 else total_count
 
         return {
-            'size': query_params.rows_per_page,
+            'size': size,
             'from': (query_params.page - 1) * (query_params.rows_per_page or 0),
             'sort': sort_by,
         }

@@ -38,7 +38,7 @@ class GetMultiQueryParamFilms(GetMultiQueryParam):
             ),
             rows_per_page: int = Query(
                 default=25,
-                ge=1,
+                ge=0,
                 le=100,
                 alias='page[size]',
                 description='Количество объектов на одной странице'
