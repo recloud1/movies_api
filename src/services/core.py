@@ -216,7 +216,7 @@ class CachedElasticPaginated(ElasticServicePaginatedBase):
 
         additional_key_params = lambda param: [f'{i.field}:{i.value}' for i in param.values]
         search_params = additional_key_params(search) if search else []
-        filter_params = additional_key_params(filters) if search else []
+        filter_params = additional_key_params(filters) if filters else []
 
         result_params = key_params + search_params + filter_params
         result = self._generate_simple_key(*result_params)
