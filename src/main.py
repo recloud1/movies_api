@@ -18,11 +18,36 @@ default_errors = {
     410: {'description': 'Already Expired'}
 }
 
+description = '''
+## Общая информация
+Данное API предназначено только для получения информации о фильмах, жанрах и людях, которые приняли участие в
+создании кинопроизведения.
+
+## Авторизация
+На текущий момент для получения информации из API авторизация не требуется.
+'''
+
+tags_metadata = [
+    {
+        'name': 'Films',
+        'description': 'Кинопроизведения доступные в системе',
+    },
+    {
+        'name': 'Genres',
+        'description': 'Жанры кинопроизведений доступные в системе',
+    },
+    {
+        'name': 'Persons',
+        'description': 'Личности, которые приняли участие в создании кинопроизведения доступные в системе',
+    },
+]
+
 app = FastAPI(
     title=envs.project.name,
-    description='Информация о фильмах, жанрах и людях, участвовавших в создании произведения',
+    description=description,
     docs_url='/api/v1/docs',
-    default_response_class=ORJSONResponse
+    default_response_class=ORJSONResponse,
+    openapi_tags=tags_metadata
 )
 
 app.add_middleware(
