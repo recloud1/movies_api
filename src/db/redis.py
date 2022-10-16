@@ -7,6 +7,8 @@ from uuid import UUID
 import orjson
 from aioredis import Redis
 
+# TODO: Сделать ревью данного сервиса
+
 redis: Optional[Redis] = None
 
 old_default = JSONEncoder.default
