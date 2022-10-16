@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from core.constants import RequestMethods, ApiRoutes
 from testdata.films import films
-from utils.elastic import init_elastic_data, clear_elastic_data
 from utils.redis import clear_cache
 from utils.requests import api_request, default_query_params
 
@@ -45,9 +44,7 @@ get_by_id_data: List[DataTest] = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('test_data', get_by_id_data)
-async def test_get_film_by_id(request_client, redis_client, es_client, test_data):
-    await init_elastic_data(es_client)
-
+async def test_get_film_by_id(request_client, redis_client, test_data):
     if test_data.params:
         await clear_cache(redis_client)
 
@@ -59,15 +56,12 @@ async def test_get_film_by_id(request_client, redis_client, es_client, test_data
         with_check=False
     )
 
-    await clear_elastic_data(es_client)
-
     assert response.status == test_data.expected.status
     assert data.get('id') == test_data.expected.value
 
 
 @pytest.mark.asyncio
-async def test_get_all_films(request_client, es_client):
-    await init_elastic_data(es_client)
+async def test_get_all_films(request_client):
     response, data = await api_request(
         request_client,
         RequestMethods.get,
@@ -75,8 +69,6 @@ async def test_get_all_films(request_client, es_client):
         with_check=False,
         query_params={**default_query_params, 'page[size]': 0}
     )
-
-    await clear_elastic_data(es_client)
 
     assert len(data.get('data')) == len(films)
 
@@ -109,8 +101,7 @@ wrong_query_params: List[DataTest] = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('query_params', wrong_query_params)
-async def test_get_films_with_wrong_query_params_failed(request_client, es_client, query_params):
-    await init_elastic_data(es_client)
+async def test_get_films_with_wrong_query_params_failed(request_client, query_params):
     response, data = await api_request(
         request_client,
         RequestMethods.get,
@@ -118,8 +109,6 @@ async def test_get_films_with_wrong_query_params_failed(request_client, es_clien
         with_check=False,
         query_params=query_params.value
     )
-
-    await clear_elastic_data(es_client)
 
     assert response.status == query_params.expected.status
 
@@ -148,8 +137,7 @@ search_test_data = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('search_data', search_test_data)
-async def test_get_films_by_search(request_client, redis_client, es_client, search_data):
-    await init_elastic_data(es_client)
+async def test_get_films_by_search(request_client, redis_client, search_data):
     if search_data.params:
         await clear_cache(redis_client)
     index_of_film_in_result = search_data.expected.value.get('count') - 1
@@ -163,8 +151,6 @@ async def test_get_films_by_search(request_client, redis_client, es_client, sear
     )
     data = data.get('data')
     objects_count = len(data)
-
-    await clear_elastic_data(es_client)
 
     assert response.status == search_data.expected.status
     assert objects_count == search_data.expected.value.get('count')
