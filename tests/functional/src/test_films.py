@@ -44,7 +44,7 @@ get_by_id_data: List[DataTest] = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('test_data', get_by_id_data)
-async def test_get_film_by_id(request_client, redis_client, test_data):
+async def test_get_film_by_id(request_client, redis_client, elastic_data, test_data):
     if test_data.params:
         await clear_cache(redis_client)
 
@@ -61,7 +61,7 @@ async def test_get_film_by_id(request_client, redis_client, test_data):
 
 
 @pytest.mark.asyncio
-async def test_get_all_films(request_client):
+async def test_get_all_films(request_client, elastic_data):
     response, data = await api_request(
         request_client,
         RequestMethods.get,
@@ -101,7 +101,7 @@ wrong_query_params: List[DataTest] = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('query_params', wrong_query_params)
-async def test_get_films_with_wrong_query_params_failed(request_client, query_params):
+async def test_get_films_with_wrong_query_params_failed(request_client, elastic_data, query_params):
     response, data = await api_request(
         request_client,
         RequestMethods.get,
@@ -137,7 +137,7 @@ search_test_data = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize('search_data', search_test_data)
-async def test_get_films_by_search(request_client, redis_client, search_data):
+async def test_get_films_by_search(request_client, redis_client, elastic_data, search_data):
     if search_data.params:
         await clear_cache(redis_client)
     index_of_film_in_result = search_data.expected.value.get('count') - 1
