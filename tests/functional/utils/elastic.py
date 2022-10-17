@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 from typing import List, Optional, Tuple
 
@@ -54,6 +55,9 @@ async def init_elastic_data(es_client: AsyncElasticsearch):
 
         await create_elastic_index(es_client, index_config, index)
         results.append(await elastic_bulk_load(es_client, testdata.get(index), index, raise_error=True))
+
+        # не во всех случаях Elasticsearch успевает создать сразу все нужные объекты, поэтому ставим задержку
+        await asyncio.sleep(0.3)
 
     return results
 
