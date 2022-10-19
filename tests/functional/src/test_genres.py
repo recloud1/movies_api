@@ -76,7 +76,7 @@ async def test_search_genre_by_name(elastic_data, request_client):
         query_params={'search': genre_name},
         with_check=False,
     )
-    assert data[0]['name'] == 'Animation', 'Incorrect genre search by name'
+    assert data.get('data')[0]['name'] == 'Animation', 'Incorrect genre search by name'
 
 
 @pytest.mark.asyncio

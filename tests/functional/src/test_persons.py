@@ -18,13 +18,14 @@ async def test_persons_amount(elastic_data, request_client):
 
 @pytest.mark.asyncio
 async def test_persons_page_size(elastic_data, request_client):
+    query_params = {**default_query_params, 'page[size]': 10}
     response, data = await api_request(
         request_client,
         RequestMethods.get,
         ApiRoutes.persons,
-        query_params={**default_query_params, 'page[number]': 1},
+        query_params=query_params
     )
-    assert len(data['data']) == default_query_params['page[size]'], 'Incorrect default number of persons per page'
+    assert len(data['data']) == query_params['page[size]'], 'Incorrect default number of persons per page'
 
 
 @pytest.mark.asyncio
@@ -52,22 +53,20 @@ async def test_persons_incorrect_page_number(elastic_data, request_client):
 
 @pytest.mark.asyncio
 async def test_get_persons_by_id(elastic_data, request_client):
-    person_id = '6a0a479b-cfec-41ac-b520-41b2b007b611'
+    person_id = 'a5a8f573-3cee-4ccc-8a2b-91cb9f55250a'
     response, data = await api_request(
         request_client,
         RequestMethods.get,
         ApiRoutes.persons,
-        with_check=False,
         route_detail=person_id,
+        with_check=False,
     )
-    assert data['name'] == next(
-        (person['name'] for person in persons if person['id'] == person_id), None
-    ), 'Incorrect get person by id'
+    assert data['id'] == person_id, 'Incorrect person search by name'
 
 
 @pytest.mark.asyncio
 async def test_search_person_by_name(elastic_data, request_client):
-    person_name = 'Animation'
+    person_name = 'Richard Marquand'
     response, data = await api_request(
         request_client,
         RequestMethods.get,
@@ -75,7 +74,7 @@ async def test_search_person_by_name(elastic_data, request_client):
         query_params={'search': person_name},
         with_check=False,
     )
-    assert data[0]['name'] == 'Animation', 'Incorrect person search by name'
+    assert data.get('data')[0]['full_name'] == person_name, 'Incorrect person search by name'
 
 
 @pytest.mark.asyncio
