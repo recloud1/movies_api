@@ -1,12 +1,12 @@
-from typing import Any, Optional, List
+from typing import Any, List, Optional
 
 import pytest
 from pydantic import BaseModel
-
-from core.constants import RequestMethods, ApiRoutes
 from testdata.films import films
 from utils.redis import clear_cache
 from utils.requests import api_request, default_query_params
+
+from core.constants import ApiRoutes, RequestMethods
 
 
 class DataTestExpected(BaseModel):

@@ -1,9 +1,8 @@
 import pytest
-
-from core.constants import RequestMethods, ApiRoutes
 from testdata.genres import genres
-from utils.elastic import init_elastic_data, clear_elastic_data
 from utils.requests import api_request, default_query_params
+
+from core.constants import ApiRoutes, RequestMethods
 
 
 @pytest.mark.asyncio

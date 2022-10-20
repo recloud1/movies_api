@@ -1,5 +1,4 @@
-from collections import defaultdict
-from typing import List, Optional, Tuple, Type, TypeVar, Set
+from typing import List, Optional, Set, Tuple, Type, TypeVar
 
 import elasticsearch
 import fastapi
@@ -7,8 +6,8 @@ from elasticsearch import AsyncElasticsearch
 
 from core.constants import ElasticIndexes
 from db.redis import RedisCache
-from models.core import Model, GetMultiQueryParam
-from models.params import Search, Filters
+from models.core import GetMultiQueryParam, Model
+from models.params import Filters, Search
 
 ModelType: Model = TypeVar('ModelType')
 Id: str = TypeVar('Id')

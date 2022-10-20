@@ -1,11 +1,11 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Path, Query
 
 from models.core import GetMultiQueryParam
 from models.params import Search, SearchValue
-from models.persons import PersonList, PersonBase
-from services.persons import get_person_service, PersonElasticService
+from models.persons import PersonBase, PersonList
+from services.persons import PersonElasticService, get_person_service
 
 persons = APIRouter()
 

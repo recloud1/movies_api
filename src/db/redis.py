@@ -1,7 +1,7 @@
 import json
 from functools import lru_cache
 from json import JSONEncoder
-from typing import Optional, Any
+from typing import Any, Optional
 from uuid import UUID
 
 import orjson

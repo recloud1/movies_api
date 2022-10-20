@@ -4,8 +4,9 @@ import aiohttp
 import aioredis
 import pytest
 import pytest_asyncio
-from core.settings import test_settings
 from elasticsearch import AsyncElasticsearch
+
+from core.settings import test_settings
 
 
 # Переопределение event_loop - не нужно использовать как фикстуру напрямую

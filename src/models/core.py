@@ -1,9 +1,9 @@
-from typing import List, TypeVar, Optional
+from typing import List, Optional, TypeVar
 
 import orjson
-from pydantic import BaseModel, validator, Field
-from pydantic.types import UUID4
 from fastapi import Query
+from pydantic import BaseModel
+from pydantic.types import UUID4
 
 
 def orjson_dumps(v, *, default):

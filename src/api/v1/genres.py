@@ -1,11 +1,11 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Path, Query
 
 from models.core import GetMultiQueryParam
 from models.genres import GenreBase, GenreList
-from models.params import SearchValue, Search
-from services.genres import get_genre_service, GenreElasticService
+from models.params import Search, SearchValue
+from services.genres import GenreElasticService, get_genre_service
 
 genres = APIRouter()
 

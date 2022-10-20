@@ -5,7 +5,7 @@ from fastapi import Depends
 
 from core.constants import ElasticIndexes
 from db.elastic import get_elastic
-from db.redis import get_redis, RedisCache
+from db.redis import RedisCache, get_redis
 from models.genres import GenreBase
 from services.core import CachedElasticPaginated
 

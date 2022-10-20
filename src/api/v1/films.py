@@ -1,9 +1,9 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query, Path
+from fastapi import APIRouter, Depends, Path, Query
 
-from models.films import FilmList, FilmFull, GetMultiQueryParamFilms
-from models.params import FilterValue, Filters, SearchValue, Search
+from models.films import FilmFull, FilmList, GetMultiQueryParamFilms
+from models.params import Filters, FilterValue, Search, SearchValue
 from services.films import FilmElasticService, get_film_service
 
 films = APIRouter()

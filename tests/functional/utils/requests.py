@@ -1,8 +1,8 @@
-from typing import Tuple, Optional
+from typing import Optional, Tuple
 
 from aiohttp import ClientResponse
 
-from core.constants import RequestMethods, ApiRoutes
+from core.constants import ApiRoutes, RequestMethods
 from core.settings import test_settings
 
 default_query_params: dict = {

@@ -3,7 +3,7 @@ from typing import List, Optional
 from fastapi import Query
 from pydantic import Field
 
-from models.core import GetMultiQueryParam, Named, IdMixin, ListModel
+from models.core import GetMultiQueryParam, IdMixin, ListModel, Named
 
 
 class FilmBase(IdMixin):
