@@ -146,8 +146,9 @@ async def test_get_films_by_search(request_client, redis_client, elastic_data, s
         request_client,
         RequestMethods.get,
         ApiRoutes.films,
+        route_detail='search',
         with_check=False,
-        query_params={**default_query_params, 'search': search_data.value}
+        query_params={**default_query_params, 'query': search_data.value}
     )
     data = data.get('data')
     objects_count = len(data)

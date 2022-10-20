@@ -71,7 +71,8 @@ async def test_search_person_by_name(elastic_data, request_client):
         request_client,
         RequestMethods.get,
         ApiRoutes.persons,
-        query_params={'search': person_name},
+        route_detail='search',
+        query_params={'query': person_name},
         with_check=False,
     )
     assert data.get('data')[0]['full_name'] == person_name, 'Incorrect person search by name'
@@ -84,7 +85,8 @@ async def test_search_not_existed_person(elastic_data, request_client):
         request_client,
         RequestMethods.get,
         ApiRoutes.persons,
-        query_params={'search': person_name},
+        route_detail='search',
+        query_params={'query': person_name},
         with_check=False,
     )
     assert len(data['data']) == 0, 'Incorrect search of not existed person name'

@@ -13,7 +13,7 @@ films = APIRouter()
     '',
     response_model=FilmList,
     summary='Получение списка кинопроизведений',
-    description='Список кинопроизведений с возможность поиска и фильтрации'
+    description='Список кинопроизведений с возможностью фильтрации'
 )
 async def get_films(
         film_service: FilmElasticService = Depends(get_film_service),
@@ -25,6 +25,25 @@ async def get_films(
         query_params=query_params,
         filters=Filters(values=[FilterValue(field='genre', value=genre)]) if genre else None,
         search=Search(values=[SearchValue(field='title', value=search)]) if search else None
+    )
+
+    return FilmList(**query_params.dict(), rows_number=count, data=results)
+
+
+@films.get(
+    '/search',
+    response_model=FilmList,
+    summary='Получение списка кинопроизведений',
+    description='Список кинопроизведений с возможностью поиска'
+)
+async def get_films_search(
+        film_service: FilmElasticService = Depends(get_film_service),
+        query_params: GetMultiQueryParamFilms = Depends(),
+        query: Optional[str] = Query(None, description='Поиск по кинопроизведениям')
+) -> FilmList:
+    results, count = await film_service.get_multi(
+        query_params=query_params,
+        search=Search(values=[SearchValue(field='title', value=query)]) if query else None
     )
 
     return FilmList(**query_params.dict(), rows_number=count, data=results)

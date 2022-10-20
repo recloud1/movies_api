@@ -72,7 +72,8 @@ async def test_search_genre_by_name(elastic_data, request_client):
         request_client,
         RequestMethods.get,
         ApiRoutes.genres,
-        query_params={'search': genre_name},
+        route_detail='search',
+        query_params={'query': genre_name},
         with_check=False,
     )
     assert data.get('data')[0]['name'] == 'Animation', 'Incorrect genre search by name'
@@ -85,8 +86,9 @@ async def test_search_not_existed_genre(elastic_data, request_client):
         request_client,
         RequestMethods.get,
         ApiRoutes.genres,
-        query_params={'search': genre_name},
-        with_check=False,
+        route_detail='search',
+        query_params={'query': genre_name},
+        with_check=False
     )
     assert len(data['data']) == 0, 'Incorrect search of not existed genre name'
 

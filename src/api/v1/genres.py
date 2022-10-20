@@ -14,16 +14,30 @@ genres = APIRouter()
     '',
     response_model=GenreList,
     summary='Получение списка жанров',
-    description='Список жанров с возможность поиска и сортировки',
+    description='Список жанров с возможность',
 )
 async def get_genres(
         genre_service: GenreElasticService = Depends(get_genre_service),
         query_params: GetMultiQueryParam = Depends(),
-        search: Optional[str] = Query(None, description='Поиск по жанрам'),
+) -> GenreList:
+    results, count = await genre_service.get_multi(query_params=query_params)
+    return GenreList(**query_params.dict(), rows_number=count, data=results)
+
+
+@genres.get(
+    '/search',
+    response_model=GenreList,
+    summary='Получение списка жанров',
+    description='Список жанров с возможность поиска и сортировки',
+)
+async def get_genres_search(
+        genre_service: GenreElasticService = Depends(get_genre_service),
+        query_params: GetMultiQueryParam = Depends(),
+        query: Optional[str] = Query(None, description='Поиск по жанрам'),
 ) -> GenreList:
     results, count = await genre_service.get_multi(
         query_params=query_params,
-        search=Search(values=[SearchValue(field='name', value=search)]) if search else None
+        search=Search(values=[SearchValue(field='name', value=query)]) if query else None
     )
     return GenreList(**query_params.dict(), rows_number=count, data=results)
 
