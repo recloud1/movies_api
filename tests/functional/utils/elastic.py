@@ -1,9 +1,9 @@
-import asyncio
 from pathlib import Path
 from typing import List, Optional, Tuple
 
 from elasticsearch import AsyncElasticsearch
 from elasticsearch._async import helpers
+
 from testdata.common import testdata
 from utils.json_reader import JsonReader
 

@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Any, List, Optional
 
 import pytest
@@ -24,19 +25,19 @@ class DataTest(BaseModel):
 get_by_id_data: List[DataTest] = [
     DataTest(
         value='e7e6d147-cc10-406c-a7a2-5e0be2231327',
-        expected=DataTestExpected(status=200, value='e7e6d147-cc10-406c-a7a2-5e0be2231327'),
+        expected=DataTestExpected(status=HTTPStatus.OK, value='e7e6d147-cc10-406c-a7a2-5e0be2231327'),
         description='Фильм найден без кэша',
         params=False
     ),
     DataTest(
         value='e7e6d147-cc10-406c-a7a2-5e0be2231327',
-        expected=DataTestExpected(status=200, value='e7e6d147-cc10-406c-a7a2-5e0be2231327'),
+        expected=DataTestExpected(status=HTTPStatus.OK, value='e7e6d147-cc10-406c-a7a2-5e0be2231327'),
         description='Фильм найден с кэшем',
         params=True
     ),
     DataTest(
         value='some_id',
-        expected=DataTestExpected(status=404, value=None),
+        expected=DataTestExpected(status=HTTPStatus.NOT_FOUND, value=None),
         description='Фильм не найден'
     )
 ]
@@ -76,24 +77,24 @@ async def test_get_all_films(request_client, elastic_data):
 wrong_query_params: List[DataTest] = [
     DataTest(
         value={**default_query_params, 'page[size]': -1},
-        expected=DataTestExpected(status=422),
+        expected=DataTestExpected(status=HTTPStatus.UNPROCESSABLE_ENTITY),
         description='Нарушение количества объектов на странице'
     ),
     DataTest(
         value={**default_query_params, 'page[size]': 101},
-        expected=DataTestExpected(status=422),
+        expected=DataTestExpected(status=HTTPStatus.UNPROCESSABLE_ENTITY),
         description='Нарушение количества объектов на странице'
     ),
 
     DataTest(
         value={**default_query_params, 'page[number]': 0},
-        expected=DataTestExpected(status=422),
+        expected=DataTestExpected(status=HTTPStatus.UNPROCESSABLE_ENTITY),
         description='Нарушение номера страницы'
     ),
 
     DataTest(
         value={**default_query_params, 'page[number]': -1},
-        expected=DataTestExpected(status=422),
+        expected=DataTestExpected(status=HTTPStatus.UNPROCESSABLE_ENTITY),
         description='Нарушение номера страницы'
     ),
 ]
@@ -117,7 +118,7 @@ search_test_data = [
     DataTest(
         value='Bucky Larson',
         expected=DataTestExpected(
-            status=200,
+            status=HTTPStatus.OK,
             value={'count': 1, 'id': '935e418d-09f3-4de4-8ce3-c31f31580b12'}
         ),
         params=False,
@@ -126,7 +127,7 @@ search_test_data = [
     DataTest(
         value='Some nothing name',
         expected=DataTestExpected(
-            status=200,
+            status=HTTPStatus.OK,
             value={'count': 0, 'id': None}
         ),
         params=False,

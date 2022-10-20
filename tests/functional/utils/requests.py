@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Optional, Tuple
 
 from aiohttp import ClientResponse
@@ -28,7 +29,7 @@ async def api_request(
     ) as response:
 
         if with_check:
-            assert response.status == 200
+            assert response.status == HTTPStatus.OK
 
         data = await response.json()
 
