@@ -46,6 +46,7 @@ services:
       - ELASTIC_HOST=elasticsearch
       - ELASTIC_PORT=9200
       - REDIS_PASSWORD=${TEST_REDIS_PASSWORD}
+      - TEST_TOKEN=${TEST_API_TOKEN}
     ports:
       - ${TEST_API_PORT}:8000
     depends_on:

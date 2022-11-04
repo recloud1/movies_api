@@ -2,6 +2,9 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Path, Query
 
+from core.constants import ROLES
+from dependencies.auth import user_has_role
+from models.auth import UserInfoJWT
 from models.films import FilmFull, FilmList, GetMultiQueryParamFilms
 from models.params import Filters, FilterValue, Search, SearchValue
 from services.films import FilmElasticService, get_film_service
@@ -19,7 +22,8 @@ async def get_films(
         film_service: FilmElasticService = Depends(get_film_service),
         query_params: GetMultiQueryParamFilms = Depends(),
         genre: Optional[str] = Query(None, description='Фильтрация фильмов по наименованию жанра'),
-        search: Optional[str] = Query(None, description='Поиск по кинопроизведениям')
+        search: Optional[str] = Query(None, description='Поиск по кинопроизведениям'),
+        author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> FilmList:
     results, count = await film_service.get_multi(
         query_params=query_params,
@@ -39,7 +43,8 @@ async def get_films(
 async def get_films_search(
         film_service: FilmElasticService = Depends(get_film_service),
         query_params: GetMultiQueryParamFilms = Depends(),
-        query: Optional[str] = Query(None, description='Поиск по кинопроизведениям')
+        query: Optional[str] = Query(None, description='Поиск по кинопроизведениям'),
+        author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> FilmList:
     results, count = await film_service.get_multi(
         query_params=query_params,
@@ -57,7 +62,8 @@ async def get_films_search(
 )
 async def get_film(
         film_id: str = Path(...),
-        film_service: FilmElasticService = Depends(get_film_service)
+        film_service: FilmElasticService = Depends(get_film_service),
+        author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> Optional[FilmFull]:
     result = await film_service.get(_id=film_id, model=FilmFull)
 

@@ -2,6 +2,9 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, Path, Query
 
+from core.constants import ROLES
+from dependencies.auth import user_has_role
+from models.auth import UserInfoJWT
 from models.core import GetMultiQueryParam
 from models.params import Search, SearchValue
 from models.persons import PersonBase, PersonList
@@ -19,6 +22,7 @@ persons = APIRouter()
 async def get_persons(
         person_service: PersonElasticService = Depends(get_person_service),
         query_params: GetMultiQueryParam = Depends(),
+        author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> PersonList:
     results, count = await person_service.get_multi(query_params=query_params)
     return PersonList(**query_params.dict(), rows_number=count, data=results)
@@ -34,6 +38,7 @@ async def get_persons_search(
         person_service: PersonElasticService = Depends(get_person_service),
         query_params: GetMultiQueryParam = Depends(),
         query: Optional[str] = Query(None, description='Поиск по персоналиям'),
+        author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> PersonList:
     results, count = await person_service.get_multi(
         query_params=query_params,
@@ -51,6 +56,7 @@ async def get_persons_search(
 async def get_person(
     person_id: str = Path(...),
     person_service: PersonElasticService = Depends(get_person_service),
+    author: UserInfoJWT = Depends(user_has_role(ROLES.user)),
 ) -> Optional[PersonBase]:
     result = await person_service.get(_id=person_id)
     return result
