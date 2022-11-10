@@ -76,3 +76,10 @@ class ListModel(Model):
 
 class Named(IdMixin):
     name: str
+
+
+class ErrorSchema(Model):
+    """
+    Формат данных для ошибок, возвращаемых сервисом
+    """
+    detail: str

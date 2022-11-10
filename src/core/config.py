@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseSettings, SecretStr
+from pydantic import BaseSettings, SecretStr, Field
 
 
 class Settings(BaseSettings):
@@ -46,11 +46,27 @@ class Logger(Settings):
         env_prefix = 'LOG_'
 
 
+class ExternalService(Settings):
+    auth: str
+
+    class Config(Settings.Config):
+        env_prefix = 'EXTERNAL_'
+
+
+class Test(Settings):
+    token: Optional[str] = None
+
+    class Config(Settings.Config):
+        env_prefix = 'TEST_'
+
+
 class Envs(Settings):
     project: Project = Project()
     redis: Redis = Redis()
     elastic: Elastic = Elastic()
     logger: Logger = Logger()
+    external: ExternalService = ExternalService()
+    test: Test = Test()
 
 
 envs = Envs()

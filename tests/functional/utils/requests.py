@@ -25,7 +25,8 @@ async def api_request(
     async with request_client.request(
             method=method,
             url=f'http://{test_settings.api.host}:{test_settings.api.port}/v1/{route}/{route_detail}',
-            params=query_params
+            params=query_params,
+            headers={'Authorization': f'Bearer {test_settings.api.token}'}
     ) as response:
 
         if with_check:

@@ -15,6 +15,8 @@ class SettingsIntegration(Settings):
 
 
 class TestApiSettings(SettingsIntegration):
+    token: str
+
     class Config(Settings.Config):
         env_prefix = 'TEST_API_'
 

@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 from starlette.middleware.cors import CORSMiddleware
 
+from api.exceptions import add_exception_handlers
 from api.v1.films import films
 from api.v1.genres import genres
 from api.v1.persons import persons
@@ -49,6 +50,8 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
     openapi_tags=tags_metadata
 )
+
+add_exception_handlers(app)
 
 app.add_middleware(
     CORSMiddleware,
